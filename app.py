@@ -1,4 +1,6 @@
 from pymongo import MongoClient
+import certifi
+
 import jwt
 import datetime
 import hashlib
@@ -6,6 +8,7 @@ from flask import Flask, render_template, jsonify, request, redirect, url_for
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 
+ca = certifi.where()
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -13,8 +16,8 @@ app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
 SECRET_KEY = 'SPARTA'
 
-client = MongoClient('localhost', 27017)
-db = client.dbsparta_plus_week4
+client = MongoClient('mongodb+srv://root:root@cluster0.gs6jy.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
+db = client.test
 
 
 @app.route('/')
@@ -49,22 +52,27 @@ def user(username):
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
-
+# 아직 encode, decode 과정을 거치지 않습니다.
+# 회원가입 기능 완성 시 주석 해제 및 코드 수정이 필요합니다.
 @app.route('/sign_in', methods=['POST'])
 def sign_in():
     # 로그인
     username_receive = request.form['username_give']
     password_receive = request.form['password_give']
 
-    pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
-    result = db.users.find_one({'username': username_receive, 'password': pw_hash})
+    # pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
+    # result = db.users.find_one({'username': username_receive, 'password': pw_hash})
+    # print(result)
+    result = db.users.find_one({'username': username_receive, 'password': password_receive})
     print(result)
+
     if result is not None:
         payload = {
          'id': username_receive,
          'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
         }
-        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+        # token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+        token = "test"
         return jsonify({'result': 'success', 'token': token})
     # 찾지 못하면
     else:
