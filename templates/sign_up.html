@@ -40,10 +40,6 @@
             font-family: 'Jua', sans-serif;
         }
 
-        .subtitle {
-            font-size: 2rem;
-            font-family: 'Gamja Flower', cursive;
-        }
 
         .is-sparta {
             color: #eee !important;
@@ -74,49 +70,14 @@
         // {% if msg %}
             //     alert("{{ msg }}")
             // {% endif %}
-        function sign_in() {
-            let username = $("#input-username").val()
-            let password = $("#input-password").val()
 
-            if (username == "") {
-                $("#help-id-login").text("아이디를 입력해주세요.")
-                $("#input-username").focus()
-                return;
-            } else {
-                $("#help-id-login").text("")
-            }
-
-            if (password == "") {
-                $("#help-password-login").text("비밀번호를 입력해주세요.")
-                $("#input-password").focus()
-                return;
-            } else {
-                $("#help-password-login").text("")
-            }
-            $.ajax({
-                type: "POST",
-                url: "/sign_in",
-                data: {
-                    username_give: username,
-                    password_give: password
-                },
-                success: function (response) {
-                    if (response['result'] == 'success') {
-                        $.cookie('mytoken', response['token'], {path: '/'});
-                        window.location.replace("/")
-                    } else {
-                        alert(response['msg'])
-                    }
-                }
-            });
-        }
 
         function sign_up() {
             let username = $("#input-username").val()
             let password = $("#input-password").val()
             let password2 = $("#input-password2").val()
             let nickname = $("#input-nickname").val()
-            console.log(username, password, password2,nickname)
+
 
 
             if ($("#help-id").hasClass("is-danger")) {
@@ -167,14 +128,6 @@
 
         }
 
-        {#function toggle_sign_up() {#}
-        {#    $("#sign-up-box").toggleClass("is-hidden")#}
-        {#    $("#div-sign-in-or-up").toggleClass("is-hidden")#}
-        {#    $("#btn-check-dup").toggleClass("is-hidden")#}
-        {#    $("#help-id").toggleClass("is-hidden")#}
-        {#    $("#help-password").toggleClass("is-hidden")#}
-        {#    $("#help-password2").toggleClass("is-hidden")#}
-        {#}#}
 
             function is_nickname(asValue) {
                 var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;
@@ -188,7 +141,7 @@
 
             function check_dup() {
                 let username = $("#input-username").val()
-                console.log(username)
+
                 if (username == "") {
                     $("#help-id").text("아이디를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
                     $("#input-username").focus()
@@ -259,23 +212,7 @@
 
 
                     </div>
-                    {#                    <div id="div-sign-in-or-up" class="has-text-centered">#}
-                    {#                        <nav class="level is-mobile">#}
-                    {#                            <button class="level-item button is-sparta" onclick="sign_in()">#}
-                    {#                                로그인#}
-                    {#                            </button>#}
-                    {##}
-                    {#                        </nav>#}
-                    {#                        <hr>#}
-                    {#                        <h4 class="mb-3">아직 회원이 아니라면</h4>#}
-                    {#                        <nav class="level is-mobile">#}
-                    {##}
-                    {#                            <button class="level-item button is-sparta is-outlined"#}
-                    {#                                    onclick="toggle_sign_up()">#}
-                    {#                                회원가입하기#}
-                    {#                            </button>#}
-                    {#                        </nav>#}
-                    {#                    </div>#}
+
 
                     <div id="sign-up-box">
                         <div class="mb-5">
@@ -296,7 +233,7 @@
                                            placeholder="닉네임">
                                     <span class="icon is-small is-left"><i class="fa fa-address-book-o" aria-hidden="true"></i></span>
                                 </div>
-{#                                <p id="help-password2" class="help">공백없이 한글,영문,숫자만 입력 가능</p>#}
+
 
                             </div>
                         </div>
