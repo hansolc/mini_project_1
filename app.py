@@ -16,7 +16,7 @@ app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
 SECRET_KEY = 'SPARTA'
 
-client = MongoClient('mongodb+srv://root:root@cluster0.gs6jy.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
+client = MongoClient('mongodb+srv://test:sparta@cluster0.mlljfme.mongodb.net/Cluster0?retryWrites=true&w=majority', tlsCAFile=ca)
 db = client.test
 
 
@@ -36,6 +36,8 @@ def home():
 @app.route('/register')
 def register():
     return render_template('sign_up.html')
+
+
 
 
 @app.route('/login')
@@ -64,17 +66,17 @@ def sign_in():
     username_receive = request.form['username_give']
     password_receive = request.form['password_give']
 
-    # pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
-    result = db.users.find_one({'username': username_receive, 'password': password_receive})
+    pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
+    result = db.users.find_one({'username': username_receive, 'password': pw_hash})
 
     if result is not None:
         payload = {
          'id': username_receive,
          'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
         }
-        # token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')
+        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')
 
-        return jsonify({'result': 'success','token' : 'token'})
+        return jsonify({'result': 'success','token' : token})
     # 찾지 못하면
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
@@ -84,11 +86,13 @@ def sign_in():
 def sign_up():
     username_receive = request.form['username_give']
     password_receive = request.form['password_give']
+    nickname_receive = request.form['nickname_receive']
     password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
     doc = {
         "username": username_receive,                               # 아이디
         "password": password_hash,                                  # 비밀번호
-        "profile_name": username_receive,                           # 프로필 이름 기본값은 아이디
+        "nickname": nickname_receive,                               # 닉네임
+        "profile_name": nickname_receive,                           # 프로필 이름 기본값은 닉네임
         "profile_pic": "",                                          # 프로필 사진 파일 이름
         "profile_pic_real": "profile_pics/profile_placeholder.png", # 프로필 사진 기본 이미지
         "profile_info": ""                                          # 프로필 한 마디
