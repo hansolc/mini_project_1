@@ -73,9 +73,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
     <script>
-        // {% if msg %}
-            //     alert("{{ msg }}")
-            // {% endif %}
+        $(document).ready(function (){
+            let invalid_token = `{{ msg }}`;
+            if(invalid_token == "invalid_token") {
+                $.removeCookie('mytoken', { path: "/"});
+            } else if(invalid_token == "timeout") {
+                alert('로그인 시간이 만료되었습니다.')
+                $.removeCookie('mytoken')
+            }
+        })
+
         function sign_in() {
             let username = $("#input-username").val()
             let password = $("#input-password").val()

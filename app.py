@@ -23,21 +23,24 @@ db = client.test
 @app.route('/')
 def home():
     token_receive = request.cookies.get('mytoken')
+    # Client에 mytoken 쿠키 값이 없으면 index 페이지를 렌더링 합니다.
+    print(token_receive)
+    if token_receive is None:
+        return render_template('index.html')
+
+    # Client에 mytoken 쿠키 값이 있고, 만료되지 않은 토큰 값일 경우 서비스 페이지로 이동합니다.
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"username": payload["id"]})
-        return render_template('index.html', user_info=user_info)
-
+        return render_template('league.html', user_info=user_info)
     except jwt.ExpiredSignatureError:
-        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+        return redirect(url_for("login", msg="timeout"))
     except jwt.exceptions.DecodeError:
-        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+        return redirect(url_for("login", msg="invalid_token"))
 
 @app.route('/register')
 def register():
     return render_template('sign_up.html')
-
-
 
 
 @app.route('/login')
@@ -45,6 +48,9 @@ def login():
     msg = request.args.get("msg")
     return render_template('index.html', msg=msg)
 
+@app.route('/league')
+def league():
+    return render_template('league.html')
 
 @app.route('/user/<username>')
 def user(username):
@@ -202,4 +208,4 @@ def update_like():
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5001, debug=True)
+    app.run('0.0.0.0', port=5000, debug=True)
