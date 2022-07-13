@@ -3,8 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <style>
+        body {
+            min-height: 100vh;
+            background-image: url(../static/backgorund.jpeg);
+            background-position: center;
+            background-size: cover;
+        }
+
+        .log-out {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            // 서버에서 전송해준 사용자 ID, nickname 값 추출 필요시 사용
+            if(window.location.search) {
+                let params = new URLSearchParams(window.location.search);
+                let username = params.get("username");
+                let nickname = params.get("nickname");
+                console.log(username, nickname)
+            }
+        })
+
+        function log_out(){
+            $.removeCookie('mytoken');
+            window.location.reload();
+        }
+    </script>
 </head>
 <body>
-  <h3>hello world</h3>
+<button class="button is-link log-out" onclick="log_out()">로그아웃</button>
 </body>
 </html>
