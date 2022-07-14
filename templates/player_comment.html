@@ -138,7 +138,7 @@
         .comments-container {
             height: 80%;
             overflow: auto;
-            border: 1px solid red;
+            border: 1px solid lightgrey;
         }
 
         .mypost {
@@ -168,10 +168,12 @@
         })
 
         function show_comment() {
+            $.cookie("id3", '{{ card }}')
+            let player = '{{ card }}';
             $.ajax({
                 type: "GET",
                 url: "/player_comment/show",
-                data: {},
+                data: {player_request : player},
                 success: function (response) {
                     let rows = response['comments']
                     for(let i=0; i<rows.length; i++) {
@@ -294,10 +296,9 @@
         }
 
         function save_comment() {
-            let params = new URLSearchParams(window.location.search);
             let comment = $("#comment").val()
-            let username = params.get("username");
-            let nickname = params.get("nickname");
+            let username = $.cookie("id1")
+            let nickname = $.cookie("id2")
             let player = '{{ card }}';
 
             $.ajax({

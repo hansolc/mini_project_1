@@ -125,14 +125,14 @@ def temp():
 @app.route('/player_comment/save', methods=['POST'])
 def save_comment():
     comment_receive = request.form['comment_give']
-    username_receive = request.form['username_give']
+    username = request.form['username_give']
     player_receive = request.form['player_give']
-    nickname_receive = request.form['nickname_give']
+    nickname = request.form['nickname_give']
     doc = {
         "player" : player_receive,
         "comment" : comment_receive,
-        "username": username_receive,  # 아이디
-        "nickname": nickname_receive,  # 닉네임
+        "username": username,  # 아이디
+        "nickname": nickname,  # 닉네임
     }
     db.users.insert_one(doc)
     return jsonify({'result': 'success'})
@@ -140,7 +140,8 @@ def save_comment():
 
 @app.route("/player_comment/show", methods=["GET"])
 def player_comment_get():
-    comment_list = list(db.users.find({},{'_id':False}))
+    player = request.cookies.get("id3")
+    comment_list = list(db.users.find({'player':player},{'_id':False}))
     return jsonify({'comments': comment_list})
 
 

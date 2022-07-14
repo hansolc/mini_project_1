@@ -79,9 +79,10 @@
             // 서버에서 전송해준 사용자 ID, nickname 값 추출 필요시 사용
             if(window.location.search) {
                 let params = new URLSearchParams(window.location.search);
-                let username = params.get("username");
-                let nickname = params.get("nickname");
-                console.log(username, nickname)
+                let id1 = params.get("username");
+                let id2 = params.get("nickname");
+                $.cookie("id1", id1);
+                $.cookie("id2", id2);
             }
         })
 
